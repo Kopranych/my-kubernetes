@@ -45,11 +45,19 @@ spec:
             path: /
             port: 80
           periodSeconds: 10 # failureThreshold * periodSeconds = количество секунд которое будет ждать для выполнения пробы
-        resources: # QoS Class: Burstable (limits != request), BestEffort (not set), Guaranteed (limits == request)
+        resources: # QoS Class: Burstable (limits != request), BestEffort (not set), Guaranteed (limits == request), если придется освобождать ресурсы в первую очередь будут убиваться поды с BestEffort затем Burstable и Guaranteed в последнюю очередь
           limits:
             cpu: 100m
             memory: 100Mi
           requests:
             cpu: 50m # 1 cpu == 1000m mili cpu
             memory: 100Mi
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/conf.d/
+      volumes:
+      - name: config
+        configMap:
+          name: first-configmap
+
 
