@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: first-deployment
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: local-test
@@ -18,7 +18,38 @@ spec:
         app: local-test
     spec:
       containers:
-      - image: nginx:1.12
+      - image: nginx:1.13
         name: nginx
         ports:
         - containerPort: 80
+        readinessProbe:
+          failureThreshold: 3 # количество попыток для выполнения
+          httpGet:
+            path: /
+            port: 80
+          periodSeconds: 10
+          successThreshold: 1 # хотя бы одна успешная проверка сбрасывает счетчик failureThreshold
+          timeoutSeconds: 1
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+          initialDelaySeconds: 10 # количество секунд перед первой проверкой приложения
+        startupProbe:
+          failureThreshold: 30
+          httpGet:
+            path: /
+            port: 80
+          periodSeconds: 10 # failureThreshold * periodSeconds = количество секунд которое будет ждать для выполнения пробы
+        resources: # QoS Class: Burstable (limits != request), BestEffort (not set), Guaranteed (limits == request)
+          limits:
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 50m # 1 cpu == 1000m mili cpu
+            memory: 100Mi
+
