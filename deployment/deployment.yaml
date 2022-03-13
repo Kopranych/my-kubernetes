@@ -20,6 +20,14 @@ spec:
       containers:
       - image: nginx:1.13
         name: nginx
+        env:
+        - name: TEST
+          value: foo
+        - name: TEST_1
+          valueFrom:
+            secretKeyRef:
+              name: test # значение берется из секрета с именем test и ключа с именем key
+              key: key
         ports:
         - containerPort: 80
         readinessProbe:
