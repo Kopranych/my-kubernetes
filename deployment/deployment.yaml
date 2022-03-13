@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: first-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: local-test
+  strategy:
+    type: RollingUpdate # стратегия обнавления подов поочередно
+    rollingUpdate:
+      maxSurge: 1 # на какое количество реплик можно добавлять при обновлении, можно задать в процентах, например 10%
+      maxUnavailable: 1 # на какое количество реплик можно удалить реплику
+  template:
+    metadata:
+      labels:
+        app: local-test
+    spec:
+      containers:
+      - image: nginx:1.12
+        name: nginx
+        ports:
+        - containerPort: 80
