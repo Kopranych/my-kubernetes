@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: first-service
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: local-test # трафик будет направлятся во все поды с названием лэйбла local-test
+  type: ClusterIP

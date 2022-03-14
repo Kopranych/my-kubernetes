@@ -2,13 +2,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: first-deployment
+  labels:
+    app: local-test
 spec:
   replicas: 2
   selector:
     matchLabels:
       app: local-test
   strategy:
-    type: RollingUpdate # стратегия обнавления подов поочередно
+    type: RollingUpdate # стратегия обновления подов поочередно
     rollingUpdate:
       maxSurge: 1 # на какое количество реплик можно добавлять при обновлении, можно задать в процентах, например 10%
       maxUnavailable: 1 # на какое количество реплик можно удалить реплику
@@ -23,11 +25,11 @@ spec:
         env:
         - name: TEST
           value: foo
-        - name: TEST_1
-          valueFrom:
-            secretKeyRef:
-              name: test # значение берется из секрета с именем test и ключа с именем key
-              key: key
+#        - name: TEST_1
+#          valueFrom:
+#            secretKeyRef:
+#              name: test # значение берется из секрета с именем test и ключа с именем key
+#              key: key
         ports:
         - containerPort: 80
         readinessProbe:
@@ -60,12 +62,12 @@ spec:
           requests:
             cpu: 50m # 1 cpu == 1000m mili cpu
             memory: 100Mi
-        volumeMounts:
-        - name: config
-          mountPath: /etc/nginx/conf.d/
-      volumes:
-      - name: config
-        configMap:
-          name: first-configmap
+#        volumeMounts:
+#        - name: config
+#          mountPath: /etc/nginx/conf.d/
+#      volumes:
+#      - name: config
+#        configMap:
+#          name: first-configmap
 
 
