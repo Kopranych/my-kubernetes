@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: first-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: first.service.ru
+    http:
+      paths: # в зависимости от пути можно направлять трафик в различные сервисы
+      - path: /
+        backend:
+          serviceName: first-service
+          servicePort: 80
