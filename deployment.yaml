@@ -65,9 +65,14 @@ spec:
         volumeMounts: # что бы под смог замонтировать настройки configMap необходимо сначала запустить configMap
         - name: config
           mountPath: /etc/nginx/conf.d/
+        - name: data
+          mountPath: /data
       volumes:
       - name: config
         configMap:
           name: first-configmap
+      - name: data
+        persistentVolumeClaim:
+          claimName: first-pvc
 
 
